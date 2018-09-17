@@ -1,11 +1,11 @@
 
 h1 a {
     color: #FCA205;
-    font-family: 'Lobster';
+    font-family: 'Lobster Two';
 }
 
 .page-header {
-    background-color: #ff9400;
+    background-color: #00aeef;
     margin-top: 0;
     padding: 20px 20px 20px 20px;
 }
@@ -21,7 +21,7 @@ h1 a {
 }
 
 h1, h2, h3, h4 {
-    font-family: 'Lobster', cursive;
+    font-family: 'Lobster Two', cursive;
 }
 
 .date {
