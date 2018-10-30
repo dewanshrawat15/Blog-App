@@ -1,4 +1,4 @@
-# Blog
+# Blog-App
 Blog-App is a blogging app. The whole project runs on Django.
 - A user can be created by the superuser. Then only can he take edit, delete or add Blog Posts.
 - There is a superuser account. Only the superuser can grant or revoke other admin rights.
