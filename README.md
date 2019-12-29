@@ -16,7 +16,7 @@ Any system with python 3 (preferably 3.6) and terminal.
 None as of now. Feel free to open an issue if any!
 
 # Wanna Contribute ?
-Yeah, sure, why not. Just be sure to connect with me at [dewanshrawat.me](https://dewanshrawat.me)
+Yeah, sure, why not. Just be sure to connect with me at [dewanshrawat.tech](https://dewanshrawat.tech)
 
 # License
 > The MIT License
