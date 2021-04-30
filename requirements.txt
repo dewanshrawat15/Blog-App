@@ -1,7 +1,2 @@
 django
 django-crispy-forms
-whitenoise
-psycopg2==2.8.5
-pytz
-gunicorn
-dj-database-url
