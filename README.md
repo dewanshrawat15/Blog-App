@@ -12,6 +12,11 @@ Any system with python 3 (preferably 3.6) and terminal.
 - Install Django
 - Run python manage.py runserver
 
+# Run as docker
+- Build project as a docker image by running ```docker build -t blog-app .```
+- Run the image as a container and binding it to a port ```docker run --publish 8000:8000 blog-app```
+- Run the image as a container and binding it to a port ```docker run -d --publish 8000:8000 blog-app``` to run in detached mode
+
 # Known Issue
 None as of now. Feel free to open an issue if any!
 
