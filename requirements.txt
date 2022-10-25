@@ -1,7 +1,7 @@
 django
 django-crispy-forms
 whitenoise
-psycopg2==2.9.3
+psycopg2==2.9.5
 pytz
 gunicorn
 dj-database-url
