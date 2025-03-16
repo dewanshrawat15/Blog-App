@@ -1,0 +1,82 @@
+services:
+  web:
+    build: . # Builds your Django application (using your provided Dockerfile)
+    command: python3 mysite/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/mysite # Mounts your project directory (for development - allows live code changes)
+    ports:
+      - "8000:8000"
+    depends_on:
+      - elasticsearch # Ensures Elasticsearch is started before the web app
+      - logstash # Ensure logstash is started
+    environment:
+      - DJANGO_SETTINGS_MODULE=mysite.settings # Replace with your actual settings module
+      # Add any other necessary environment variables for your Django app here
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200 # Connect Django to Elasticsearch if needed for search or other features.
+    logging: # Configure logging for the Django container
+      driver: "json-file" # Use JSON logging (easy to parse)
+      options:
+        max-size: "10m" # Limit log file size
+        max-file: "5" # Rotate log files
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.16 # Use a specific, compatible version.  Avoid 'latest' in production.
+    platform: linux/arm64
+    container_name: elasticsearch
+    environment:
+      - node.name=elasticsearch
+      - cluster.name=es-docker-cluster
+      - discovery.type=single-node # Single-node for simplicity; for production, use a multi-node cluster.
+      - bootstrap.memory_lock=true # lock the memory
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # Adjust Java heap size (important for performance)
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data # Persistent data volume
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  logstash:
+    build:
+      context: ./logstash # <--- Tell Docker to build from the logstash directory
+      args:
+        DOCKER_GID: ${DOCKER_GID}
+      dockerfile: Dockerfile
+    container_name: logstash
+    volumes:
+      - ./logstash/config:/usr/share/logstash/pipeline
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "5044:5044"
+      - "4000:4000/tcp"
+      - "4000:4000/udp"
+      - "9600:9600" # For logstash monitoring
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m" # Adjust Java heap size
+    depends_on:
+      - elasticsearch
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.16
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+volumes:
+  esdata1:
+    driver: local

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from pythonjsonlogger import jsonlogger  # Import the class directly
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -124,3 +126,33 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'json': {
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',  # Use the imported class
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s %(pathname)s %(lineno)d',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'json',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'], # Or just 'console'
+            'level': 'INFO',  # Adjust as needed (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+            'propagate': True,
+        },
+        # Configure other loggers as needed
+        'my_app': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False, # Prevent duplication if your_app is under django
+        },
+    },
+}
