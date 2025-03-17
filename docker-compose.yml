@@ -18,12 +18,15 @@ services:
       options:
         max-size: "10m" # Limit log file size
         max-file: "5" # Rotate log files
+    networks:
+      - elk_network
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.16 # Use a specific, compatible version.  Avoid 'latest' in production.
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.5 # Use a specific, compatible version.  Avoid 'latest' in production.
     platform: linux/arm64
     container_name: elasticsearch
     environment:
       - node.name=elasticsearch
+      - xpack.security.enabled=false
       - cluster.name=es-docker-cluster
       - discovery.type=single-node # Single-node for simplicity; for production, use a multi-node cluster.
       - bootstrap.memory_lock=true # lock the memory
@@ -37,6 +40,8 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    networks:
+      - elk_network
   logstash:
     build:
       context: ./logstash # <--- Tell Docker to build from the logstash directory
@@ -61,9 +66,10 @@ services:
       options:
         max-size: "10m"
         max-file: "5"
-
+    networks:
+      - elk_network
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.17.16
+    image: docker.elastic.co/kibana/kibana:8.16.5
     container_name: kibana
     ports:
       - "5601:5601"
@@ -77,6 +83,11 @@ services:
       options:
         max-size: "10m"
         max-file: "5"
+    networks:
+      - elk_network
 volumes:
   esdata1:
     driver: local
+networks:
+  elk_network:
+    driver: bridge

@@ -127,16 +127,74 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'iso8601': {
+#             'format': '{asctime} {levelname} {name} {message}',
+#             'style': '{',
+#             'datefmt': '%Y-%m-%dT%H:%M:%S.%fZ'
+#         },
+#         'json': {
+#             '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+#             'format': '%(asctime)s %(levelname)s %(name)s %(message)s %(pathname)s %(lineno)d %(funcName)s %(process)d %(thread)d',
+#             'datefmt': '%Y-%m-%dT%H:%M:%SZ',
+#         },
+#     },
+#     'handlers': {
+#         'logstash': {
+#             'level': 'DEBUG',
+#             'class': 'logstash.LogstashHandler',
+#             'host': 'logstash',
+#             'port': 4000,
+#             'version': 1,
+#             'message_type': 'logstash',
+#             'fqdn': False
+#         },
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'json',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console', 'logstash'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#         '': {  # Root logger
+#             'handlers': ['console', 'logstash'],
+#             'level': 'INFO',
+#         },
+#     },
+# }
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
+        'iso8601': {
+            'format': '{asctime} {levelname} {name} {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%dT%H:%M:%S.%fZ'
+        },
         'json': {
-            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',  # Use the imported class
-            'format': '%(asctime)s %(levelname)s %(name)s %(message)s %(pathname)s %(lineno)d',
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s %(pathname)s %(lineno)d %(funcName)s %(process)d %(thread)d %(server_time)s',
+            'datefmt': '%Y-%m-%dT%H:%M:%SZ',
         },
     },
     'handlers': {
+        'logstash': {
+            'level': 'DEBUG',
+            'class': 'logstash.LogstashHandler',
+            'host': 'logstash',
+            'port': 4000,
+            'version': 1,
+            'message_type': 'logstash',
+            'fqdn': False
+        },
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'json',
@@ -144,15 +202,13 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console'], # Or just 'console'
-            'level': 'INFO',  # Adjust as needed (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+            'handlers': ['console', 'logstash'],
+            'level': 'INFO',
             'propagate': True,
         },
-        # Configure other loggers as needed
-        'my_app': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False, # Prevent duplication if your_app is under django
+        '': {  # Root logger
+            'handlers': ['console', 'logstash'],
+            'level': 'INFO',
         },
     },
 }

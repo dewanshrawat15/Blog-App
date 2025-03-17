@@ -1,3 +1,4 @@
 django
 django-crispy-forms
 python-json-logger
+python-logstash
